@@ -17,15 +17,23 @@ public class DialogueData
 {
     public int DialogueID;
     public string Text;
-    public Characters Personaje;
+    public Characters TalkingCharacter;
+
+    public Positions TalkingCharacterPositions;
+
+    public Characters standingCharacter;
+
+    public Positions StandingCharacterPositions;
+
 
     public CameraPosition CameraPosition;
+
 }
 
 //Camera's availble positions
 public enum CameraPosition{
-        Mueble,
-        Corredor
+        Drawer,
+        Corridor
 }
 
 //Characters Available in the game
@@ -33,4 +41,12 @@ public enum Characters{
     Teresa,
     Regina,
     Lara
+}
+
+public enum Positions
+{
+    DrawerPos1,
+    DrawerPos2,
+    CorridorPos1,
+    CorridorPos2
 }

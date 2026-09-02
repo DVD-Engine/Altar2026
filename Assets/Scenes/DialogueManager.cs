@@ -51,6 +51,8 @@ public class DialogueManager : MonoBehaviour
         {
             
             Debug.Log(dialogueList[currentIndex].DialogueID.ToString());
+            HandleCamera(dialogueList[currentIndex]);
+            HandleCharactersPosition(dialogueList[currentIndex]);
             currentIndex++;
         }
     }
@@ -58,15 +60,34 @@ public class DialogueManager : MonoBehaviour
 
     public void HandleCamera(DialogueData dialogueData)
     {
-        //We get the CameraPosition from the dialogue
+
+        //We get the CameraPosition set from the dialogue
         string cameraPosition = dialogueData.CameraPosition.ToString();
 
-        if(cameraPosition == "Mueble"){
-            transform.position = new Vector3();
+        //If the camera position is Drawer we set the camera pos to this values
+        if(cameraPosition == "Drawer"){
+            targetCamera.transform.position = new Vector3(-0.45f, 1f, 0.1f);
+            targetCamera.transform.rotation = Quaternion.Euler(0f, 7f, 0f);
         }
-        if(cameraPosition == "Corredor"){
-            
+
+        //If the camera position is Corridor we set the camera pos to this values
+        if(cameraPosition == "Corridor"){
+            targetCamera.transform.position = new Vector3(0f, 1f, 0f);
+            targetCamera.transform.rotation = Quaternion.Euler(0f, 180f, 0f);            
         }
+
+    }
+
+    public void HandleCharactersPosition (DialogueData dialogueData)
+    {
+        GameObject targetTalkingCharacter = GameObject.Find(dialogueData.TalkingCharacter.ToString());
+        GameObject targetStandingCharacter = GameObject.Find(dialogueData.standingCharacter.ToString());
+
+        GameObject targetTalkingCharacterPos = GameObject.Find(dialogueData.TalkingCharacterPositions.ToString());
+        GameObject targetStandingCharacterPos = GameObject.Find(dialogueData.StandingCharacterPositions.ToString());
+
+        targetTalkingCharacter.transform.position = targetTalkingCharacterPos.transform.position;
+        targetStandingCharacter.transform.position = targetStandingCharacterPos.transform.position;
 
     }
 }
