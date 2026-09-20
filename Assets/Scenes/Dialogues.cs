@@ -16,7 +16,7 @@ public class Dialogues : MonoBehaviour
 public class DialogueData
 {
     public int DialogueID;
-    public string Text;
+    public string dialogueText;
     public Characters TalkingCharacter;
 
     public Positions TalkingCharacterPositions;
