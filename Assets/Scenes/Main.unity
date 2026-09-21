@@ -699,6 +699,7 @@ MonoBehaviour:
     standingCharacter: 1
     StandingCharacterPositions: 1
     CameraPosition: 0
+    timeOfDay: 2
   - DialogueID: 1
     dialogueText: Este es el segundo dialogo
     TalkingCharacter: 0
@@ -706,6 +707,7 @@ MonoBehaviour:
     standingCharacter: 1
     StandingCharacterPositions: 1
     CameraPosition: 0
+    timeOfDay: 0
   - DialogueID: 2
     dialogueText: Este es el tercer dialogo se hara mas largo con el fin de testing
     TalkingCharacter: 0
@@ -713,6 +715,7 @@ MonoBehaviour:
     standingCharacter: 1
     StandingCharacterPositions: 1
     CameraPosition: 0
+    timeOfDay: 1
   - DialogueID: 3
     dialogueText: Este es el cuarto dialogo se hara mas largo con el fin de testing
     TalkingCharacter: 1
@@ -720,6 +723,7 @@ MonoBehaviour:
     standingCharacter: 0
     StandingCharacterPositions: 1
     CameraPosition: 0
+    timeOfDay: 0
   - DialogueID: 4
     dialogueText: 
     TalkingCharacter: 0
@@ -727,6 +731,7 @@ MonoBehaviour:
     standingCharacter: 1
     StandingCharacterPositions: 3
     CameraPosition: 1
+    timeOfDay: 2
   - DialogueID: 5
     dialogueText: Este es el sexto dialogo se hara mas largo con el fin de testing
     TalkingCharacter: 0
@@ -734,6 +739,7 @@ MonoBehaviour:
     standingCharacter: 1
     StandingCharacterPositions: 3
     CameraPosition: 1
+    timeOfDay: 0
 --- !u!4 &348277819
 Transform:
   m_ObjectHideFlags: 0
@@ -1120,6 +1126,10 @@ MonoBehaviour:
   charName: {fileID: 429744143}
   charDialogueText: {fileID: 412102546}
   typeSpeed: 0.03
+  sunLight: {fileID: 410087040}
+  materialDay: {fileID: 2100000, guid: b729b08273e2fba42a658a5c35f9df23, type: 2}
+  materialSunset: {fileID: 2100000, guid: 14483040a9f97a94587fc1c9beaef0b2, type: 2}
+  materialNight: {fileID: 2100000, guid: 94c690917f10d2f4ca9e8279fb6d7474, type: 2}
 --- !u!4 &641537353
 Transform:
   m_ObjectHideFlags: 0

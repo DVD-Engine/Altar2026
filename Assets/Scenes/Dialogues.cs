@@ -18,17 +18,20 @@ public class DialogueData
     public int DialogueID;
     public string dialogueText;
     public Characters TalkingCharacter;
-
     public Positions TalkingCharacterPositions;
-
     public Characters standingCharacter;
-
     public Positions StandingCharacterPositions;
-
-
     public CameraPosition CameraPosition;
+     public TimeOfDay timeOfDay;
 
 }
+
+public enum TimeOfDay
+{
+    Day,
+    Sunset,
+    Night
+} 
 
 //Camera's availble positions
 public enum CameraPosition{
