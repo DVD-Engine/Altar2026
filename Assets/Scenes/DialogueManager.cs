@@ -61,6 +61,10 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
+
+        targetCamera.transform.position = new Vector3(-0.45f, 1f, 0.1f);
+        targetCamera.transform.rotation = Quaternion.Euler(0f, 7f, 0f);
+
         RenderSettings.skybox = materialNight;
         sunLight.transform.rotation = Quaternion.Euler(-70.196f, -95.416f, 153.642f);
         sunLight.color = Color.white;
@@ -85,6 +89,7 @@ public class DialogueManager : MonoBehaviour
 
         if (advanceDialogue.WasPressedThisFrame())
         {
+
             if (isTyping)
             {
                 // First press while typing: skip straight to full text
@@ -127,18 +132,37 @@ public class DialogueManager : MonoBehaviour
 
     }
 
-    public void HandleCharactersPosition (DialogueData dialogueData)
+    public void HandleCharactersPosition(DialogueData dialogueData)
     {
+        // Hide every character's sprite first
+        foreach (Characters c in Enum.GetValues(typeof(Characters)))
+        {
+            GameObject charObj = GameObject.Find(c.ToString());
+            if (charObj != null)
+            {
+                SpriteRenderer sr = charObj.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.enabled = false;
+                }
+            }
+        }
+
+        // If there's no dialogue text, leave everyone hidden
+        if (string.IsNullOrEmpty(dialogueData.dialogueText))
+        {
+            return;
+        }
+
         GameObject targetTalkingCharacter = GameObject.Find(dialogueData.TalkingCharacter.ToString());
-        GameObject targetStandingCharacter = GameObject.Find(dialogueData.standingCharacter.ToString());
 
-        GameObject targetTalkingCharacterPos = GameObject.Find(dialogueData.TalkingCharacterPositions.ToString());
-        GameObject targetStandingCharacterPos = GameObject.Find(dialogueData.StandingCharacterPositions.ToString());
+        // Position depends only on which camera position this dialogue uses
+        string posName = dialogueData.CameraPosition == CameraPosition.Drawer ? "DrawerPos1" : "CorridorPos1";
+        GameObject targetPos = GameObject.Find(posName);
 
-        targetTalkingCharacter.transform.position = targetTalkingCharacterPos.transform.position;
-        targetStandingCharacter.transform.position = targetStandingCharacterPos.transform.position;
+        targetTalkingCharacter.transform.position = targetPos.transform.position;
+        targetTalkingCharacter.GetComponent<SpriteRenderer>().enabled = true;
     }
-
     public void HandleDialogueBox(DialogueData dialogueData)
     {
         string dialogueText = dialogueData.dialogueText;

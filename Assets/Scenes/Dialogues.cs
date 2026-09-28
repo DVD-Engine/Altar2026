@@ -18,9 +18,6 @@ public class DialogueData
     public int DialogueID;
     public string dialogueText;
     public Characters TalkingCharacter;
-    public Positions TalkingCharacterPositions;
-    public Characters standingCharacter;
-    public Positions StandingCharacterPositions;
     public CameraPosition CameraPosition;
      public TimeOfDay timeOfDay;
 
@@ -46,10 +43,3 @@ public enum Characters{
     Lara
 }
 
-public enum Positions
-{
-    DrawerPos1,
-    DrawerPos2,
-    CorridorPos1,
-    CorridorPos2
-}

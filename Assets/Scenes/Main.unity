@@ -226,7 +226,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 3.95882, y: 0.318, z: 1.7058799}
-  m_LocalScale: {x: 6.5022683, y: 5.0577044, z: 0.96464}
+  m_LocalScale: {x: 6.5022683, y: 5.0577044, z: 0.66490704}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 187316615}
@@ -693,53 +693,256 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Dialogues
   dialogues:
   - DialogueID: 0
-    dialogueText: Este es el primer Dialogo
+    dialogueText: Mama gracias por tanto en mi vida, espero hoy nos visites una vez
+      mas.
     TalkingCharacter: 0
-    TalkingCharacterPositions: 0
-    standingCharacter: 1
-    StandingCharacterPositions: 1
     CameraPosition: 0
     timeOfDay: 2
   - DialogueID: 1
-    dialogueText: Este es el segundo dialogo
-    TalkingCharacter: 0
-    TalkingCharacterPositions: 0
-    standingCharacter: 1
-    StandingCharacterPositions: 1
-    CameraPosition: 0
-    timeOfDay: 0
-  - DialogueID: 2
-    dialogueText: Este es el tercer dialogo se hara mas largo con el fin de testing
-    TalkingCharacter: 0
-    TalkingCharacterPositions: 0
-    standingCharacter: 1
-    StandingCharacterPositions: 1
-    CameraPosition: 0
-    timeOfDay: 1
-  - DialogueID: 3
-    dialogueText: Este es el cuarto dialogo se hara mas largo con el fin de testing
+    dialogueText: '. . . . . '
     TalkingCharacter: 1
-    TalkingCharacterPositions: 0
-    standingCharacter: 0
-    StandingCharacterPositions: 1
     CameraPosition: 0
-    timeOfDay: 0
+    timeOfDay: 2
+  - DialogueID: 2
+    dialogueText: No te preocupes hija, no tiene nada de malo no saber que decir
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 3
+    dialogueText: Tu paleta abuela
+    TalkingCharacter: 1
+    CameraPosition: 0
+    timeOfDay: 2
   - DialogueID: 4
     dialogueText: 
     TalkingCharacter: 0
-    TalkingCharacterPositions: 2
-    standingCharacter: 1
-    StandingCharacterPositions: 3
     CameraPosition: 1
     timeOfDay: 2
   - DialogueID: 5
-    dialogueText: Este es el sexto dialogo se hara mas largo con el fin de testing
+    dialogueText: 
     TalkingCharacter: 0
-    TalkingCharacterPositions: 2
-    standingCharacter: 1
-    StandingCharacterPositions: 3
     CameraPosition: 1
     timeOfDay: 0
+  - DialogueID: 6
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 1
+  - DialogueID: 7
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 2
+  - DialogueID: 8
+    dialogueText: Lista para poner el altar hija?
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 2
+  - DialogueID: 9
+    dialogueText: Si mama
+    TalkingCharacter: 1
+    CameraPosition: 1
+    timeOfDay: 2
+  - DialogueID: 10
+    dialogueText: 'Madre, un dia mas en el cual esperamos con ansias tu visita, Regina
+      ya es doctora '
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 11
+    dialogueText: 'Han sido fechas pesadas abuela, pero todos me han apoyado, '
+    TalkingCharacter: 1
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 12
+    dialogueText: Bueno, andale hija pon su paleta
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 13
+    dialogueText: . . . . .
+    TalkingCharacter: 1
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 14
+    dialogueText: Mama. . . .
+    TalkingCharacter: 1
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 15
+    dialogueText: Aprovecho y tambien te digo a ti abuela, estoy embarazada. . .
+    TalkingCharacter: 1
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 16
+    dialogueText: Hija, felicidades, ay que emocion, madre escuchaste eso? Ay mi
+      hija que felicidad
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 17
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 18
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 1
+  - DialogueID: 19
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 2
+  - DialogueID: 20
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 21
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 22
+    dialogueText: Abuela . . . .
+    TalkingCharacter: 1
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 23
+    dialogueText: Ma- Mami. . . .
+    TalkingCharacter: 2
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 24
+    dialogueText: Que paso hermosa?
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 25
+    dialogueText: '* Snif, snif *'
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 26
+    dialogueText: Andale, Lara, pon el pastelito, a tu abuela le encataban esos
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 27
+    dialogueText: Ten abuela, tu paleta. . . .
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 28
+    dialogueText: Espero que despues de tan-     tantos a;os. . . . . . puedan psar
+      tiempo juntas
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 29
+    dialogueText: '* Snif, snif *'
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 29
+    dialogueText: Larita, te deje pan de muerto en la cocina, por que no vas y te
+      srives tambien un poco de leche, vas a ver te va a gustar
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 29
+    dialogueText: SI!
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 32
+    dialogueText: . . . . . No- no se que hacer mama, solo tiene 6, por- por que
+      a ella?
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 33
+    dialogueText: El trabajo, los pacientes, medicamentos, me estoy cansado mama
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 34
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 35
+    dialogueText: Hija, alistate para la escuela
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 36
+    dialogueText: Si mama voy
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 37
+    dialogueText: Lara, segura de ir hoy?
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 38
+    dialogueText: Si mama, no te preocupes
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 39
+    dialogueText: No vayas hoy ok cari;o?
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 1
+  - DialogueID: 40
+    dialogueText: '. . . . '
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 41
+    dialogueText: Lara! Vas tarde
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 42
+    dialogueText: Lara!
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 43
+    dialogueText: La- Lara. . .
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 0
+  - DialogueID: 44
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 1
+    timeOfDay: 2
+  - DialogueID: 45
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 46
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 47
+    dialogueText: 
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
+  - DialogueID: 48
+    dialogueText: Mama, abuela, porfavor cuiden de mi larita, si?
+    TalkingCharacter: 0
+    CameraPosition: 0
+    timeOfDay: 2
 --- !u!4 &348277819
 Transform:
   m_ObjectHideFlags: 0
@@ -785,9 +988,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1419989828}
-  - {fileID: 1428447611}
   - {fileID: 331060027}
-  - {fileID: 1948864992}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
@@ -1468,37 +1669,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 406005412}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1428447610
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1428447611}
-  m_Layer: 0
-  m_Name: DrawerPos2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1428447611
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1428447610}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7, y: 0.1, z: 2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 406005412}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1755810920
 GameObject:
   m_ObjectHideFlags: 0
@@ -1723,37 +1893,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 187316615}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1948864991
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1948864992}
-  m_Layer: 0
-  m_Name: CorridorPos2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1948864992
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1948864991}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 0, z: -2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 406005412}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2029397728 stripped
 GameObject:
