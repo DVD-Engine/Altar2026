@@ -37,6 +37,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField]
     private float typeSpeed = 0.03f; // seconds per character
     
+    [Header("Ambient Audio")]
+    [SerializeField] private AudioSource ambientAudioSource;
+    [SerializeField] private AudioClip morningAudio;
+    [SerializeField] private AudioClip afternoonAudio;
+    [SerializeField] private AudioClip nightAudio;
+
     private bool isTyping = false;
     private Coroutine typingCoroutine;
 
@@ -58,6 +64,7 @@ public class DialogueManager : MonoBehaviour
     private int currentIndex = 0;
 
     private TimeOfDay currentTimeOfDay = (TimeOfDay)(-1); // invalid on purpose, forces first apply
+    private TimeOfDay currentAudioTimeOfDay = (TimeOfDay)(-1); // invalido a propósito, fuerza el primer play
 
     void Start()
     {
@@ -100,10 +107,11 @@ public class DialogueManager : MonoBehaviour
                 // Not typing: advance to next dialogue
                 Debug.Log(dialogueList[currentIndex].DialogueID.ToString());
                 Debug.Log(dialogueList[currentIndex].dialogueText.ToString());
-    
+
                 HandleDialogueBox(dialogueList[currentIndex]);
                 HandleCamera(dialogueList[currentIndex]);
                 HandleLighting(dialogueList[currentIndex]);    
+                HandleAmbientAudio(dialogueList[currentIndex]);
                 HandleCharactersPosition(dialogueList[currentIndex]);    
                 HandleDialogueText(dialogueList[currentIndex]);   
                 currentIndex++;
@@ -255,5 +263,35 @@ public class DialogueManager : MonoBehaviour
         sunLight.useColorTemperature = true;
         DynamicGI.UpdateEnvironment();
     }
+
+    public void HandleAmbientAudio(DialogueData dialogueData)
+{
+    // Si el TimeOfDay es igual al que ya está sonando, no hacemos nada
+    if (dialogueData.timeOfDay == currentAudioTimeOfDay) return;
+
+    currentAudioTimeOfDay = dialogueData.timeOfDay;
+
+    AudioClip clipToPlay = null;
+
+    switch (dialogueData.timeOfDay)
+    {
+        case TimeOfDay.Day:
+            clipToPlay = morningAudio;
+            break;
+        case TimeOfDay.Sunset:
+            clipToPlay = afternoonAudio;
+            break;
+        case TimeOfDay.Night:
+            clipToPlay = nightAudio;
+            break;
+    }
+
+    if (clipToPlay != null)
+    {
+        ambientAudioSource.clip = clipToPlay;
+        ambientAudioSource.loop = true;
+        ambientAudioSource.Play();
+    }
+}
 }
 
