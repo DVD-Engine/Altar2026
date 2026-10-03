@@ -43,6 +43,17 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private AudioClip afternoonAudio;
     [SerializeField] private AudioClip nightAudio;
 
+    [Header("Blip Audio (Animal Crossing style)")]
+    [SerializeField] private AudioSource blipAudioSource;
+    [SerializeField] private float blipPitchVariance = 0.05f; // que tanto varia el pitch aleatoriamente por caracter
+
+    [Header("Voice Pitch por personaje")]
+    [SerializeField] private float teresaPitch = 0.8f;
+    [SerializeField] private float reginaPitch = 1.0f;
+    [SerializeField] private float laraPitch = 1.3f;
+
+    private AudioClip blipClip;
+
     private bool isTyping = false;
     private Coroutine typingCoroutine;
 
@@ -84,6 +95,8 @@ public class DialogueManager : MonoBehaviour
         dialogueList = localDialogues.dialogues;
         advanceDialogue = InputSystem.actions.FindAction("Jump");
         dialogueBox.SetActive(false);
+
+        blipClip = GenerateBlipClip();
     }
 
     void Update()
@@ -193,12 +206,14 @@ public class DialogueManager : MonoBehaviour
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
 
-        typingCoroutine = StartCoroutine(TypeText(dialogueText));
+        typingCoroutine = StartCoroutine(TypeText(dialogueText, dialogueData.TalkingCharacter));
     }
 
-    private IEnumerator TypeText(string dialogueText)
+    private IEnumerator TypeText(string dialogueText, Characters speakingChar)
     {
         isTyping = true;
+
+        float basePitch = GetPitchForCharacter(speakingChar);
 
         charDialogueText.text = dialogueText;
         charDialogueText.ForceMeshUpdate(); // fuerza el recalculo sincrónico del mesh
@@ -209,6 +224,13 @@ public class DialogueManager : MonoBehaviour
         for (int i = 0; i <= totalChars; i++)
         {
             charDialogueText.maxVisibleCharacters = i;
+
+            // Reproduce un blip por cada caracter visible, saltando espacios
+            if (i < dialogueText.Length && !char.IsWhiteSpace(dialogueText[i]))
+            {
+                PlayBlip(basePitch);
+            }
+
             yield return new WaitForSeconds(typeSpeed);
         }
 
@@ -265,33 +287,79 @@ public class DialogueManager : MonoBehaviour
     }
 
     public void HandleAmbientAudio(DialogueData dialogueData)
-{
-    // Si el TimeOfDay es igual al que ya está sonando, no hacemos nada
-    if (dialogueData.timeOfDay == currentAudioTimeOfDay) return;
-
-    currentAudioTimeOfDay = dialogueData.timeOfDay;
-
-    AudioClip clipToPlay = null;
-
-    switch (dialogueData.timeOfDay)
     {
-        case TimeOfDay.Day:
-            clipToPlay = morningAudio;
-            break;
-        case TimeOfDay.Sunset:
-            clipToPlay = afternoonAudio;
-            break;
-        case TimeOfDay.Night:
-            clipToPlay = nightAudio;
-            break;
+        // Si el TimeOfDay es igual al que ya está sonando, no hacemos nada
+        if (dialogueData.timeOfDay == currentAudioTimeOfDay) return;
+
+        currentAudioTimeOfDay = dialogueData.timeOfDay;
+
+        AudioClip clipToPlay = null;
+
+        switch (dialogueData.timeOfDay)
+        {
+            case TimeOfDay.Day:
+                clipToPlay = morningAudio;
+                break;
+            case TimeOfDay.Sunset:
+                clipToPlay = afternoonAudio;
+                break;
+            case TimeOfDay.Night:
+                clipToPlay = nightAudio;
+                break;
+        }
+
+        if (clipToPlay != null)
+        {
+            ambientAudioSource.clip = clipToPlay;
+            ambientAudioSource.loop = true;
+            ambientAudioSource.Play();
+        }
     }
 
-    if (clipToPlay != null)
+    // ---------- Blip Audio (Animal Crossing style) ----------
+
+    private float GetPitchForCharacter(Characters character)
     {
-        ambientAudioSource.clip = clipToPlay;
-        ambientAudioSource.loop = true;
-        ambientAudioSource.Play();
+        switch (character)
+        {
+            case Characters.Teresa:
+                return teresaPitch;
+            case Characters.Regina:
+                return reginaPitch;
+            case Characters.Lara:
+                return laraPitch;
+            default:
+                return 1.0f;
+        }
+    }
+
+    private void PlayBlip(float basePitch)
+    {
+        if (blipAudioSource == null || blipClip == null) return;
+
+        blipAudioSource.pitch = basePitch + UnityEngine.Random.Range(-blipPitchVariance, blipPitchVariance);
+        blipAudioSource.PlayOneShot(blipClip);
+    }
+
+    private AudioClip GenerateBlipClip()
+    {
+        int sampleRate = 44100;
+        float duration = 0.05f; // 50ms, bien cortito
+        int sampleCount = (int)(sampleRate * duration);
+        float frequency = 440f; // tono base, A4
+
+        AudioClip clip = AudioClip.Create("blip", sampleCount, 1, sampleRate, false);
+        float[] samples = new float[sampleCount];
+
+        for (int i = 0; i < sampleCount; i++)
+        {
+            float t = (float)i / sampleRate;
+            // Onda seno con un fade-out rapido para que no truene al final
+            float envelope = 1f - (float)i / sampleCount;
+            samples[i] = Mathf.Sin(2 * Mathf.PI * frequency * t) * envelope * 0.5f;
+        }
+
+        clip.SetData(samples, 0);
+        return clip;
     }
 }
-}
-
