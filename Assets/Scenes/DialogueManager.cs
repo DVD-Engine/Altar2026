@@ -8,18 +8,15 @@ using TMPro;
 public class DialogueManager : MonoBehaviour
 {
 
-    //Assign references needed in inspector:
-
-    //Assign Camera
-    [Header("Camera:")]
-    [SerializeField]
-    private Camera targetCamera;
-    
     //Assign the Dialogues list in Inspector
     [Header("Dialogues")]
     [SerializeField]
     private Dialogues localDialogues;
     private List<DialogueData> dialogueList;
+
+    [Header("Environment")]
+    [SerializeField]
+    private EnvironmentManager environmentManager;
 
     [Header("Dialogue Box")]
     [SerializeField]
@@ -36,12 +33,6 @@ public class DialogueManager : MonoBehaviour
     [Header("Typewriter Settings")]
     [SerializeField]
     private float typeSpeed = 0.03f; // seconds per character
-    
-    [Header("Ambient Audio")]
-    [SerializeField] private AudioSource ambientAudioSource;
-    [SerializeField] private AudioClip morningAudio;
-    [SerializeField] private AudioClip afternoonAudio;
-    [SerializeField] private AudioClip nightAudio;
 
     [Header("Blip Audio (Animal Crossing style)")]
     [SerializeField] private AudioSource blipAudioSource;
@@ -52,6 +43,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float reginaPitch = 1.0f;
     [SerializeField] private float laraPitch = 1.3f;
 
+    [Header("Character Stage Sprites")]
+    [Tooltip("Asigna aqui el sprite correspondiente a cada etapa de cada personaje")]
+    [SerializeField] private List<CharacterStageSprite> characterStageSprites;
+
     private AudioClip blipClip;
 
     private bool isTyping = false;
@@ -60,38 +55,11 @@ public class DialogueManager : MonoBehaviour
     //Variable for referencing the action
     InputAction advanceDialogue;
 
-    [Header("Lighting")]
-    [SerializeField]
-    private Light sunLight;
-
-    [SerializeField]
-    private Material materialDay;
-    [SerializeField]
-    private Material materialSunset;
-    [SerializeField]
-    private Material materialNight;
-
     //Index for exploring the Dialogue List
     private int currentIndex = 0;
 
-    private TimeOfDay currentTimeOfDay = (TimeOfDay)(-1); // invalid on purpose, forces first apply
-    private TimeOfDay currentAudioTimeOfDay = (TimeOfDay)(-1); // invalido a propósito, fuerza el primer play
-
     void Start()
     {
-
-        targetCamera.transform.position = new Vector3(-0.45f, 1f, 0.1f);
-        targetCamera.transform.rotation = Quaternion.Euler(0f, 7f, 0f);
-
-        RenderSettings.skybox = materialNight;
-        sunLight.transform.rotation = Quaternion.Euler(-70.196f, -95.416f, 153.642f);
-        sunLight.color = Color.white;
-        sunLight.useColorTemperature = true;
-        sunLight.colorTemperature = 20000f;
-        sunLight.shadowStrength = 0f;
-        currentTimeOfDay = TimeOfDay.Night; // keep this in sync so the early-out in HandleLighting behaves correctly
-        DynamicGI.UpdateEnvironment();
-    
         dialogueList = localDialogues.dialogues;
         advanceDialogue = InputSystem.actions.FindAction("Jump");
         dialogueBox.SetActive(false);
@@ -122,35 +90,14 @@ public class DialogueManager : MonoBehaviour
                 Debug.Log(dialogueList[currentIndex].dialogueText.ToString());
 
                 HandleDialogueBox(dialogueList[currentIndex]);
-                HandleCamera(dialogueList[currentIndex]);
-                HandleLighting(dialogueList[currentIndex]);    
-                HandleAmbientAudio(dialogueList[currentIndex]);
-                HandleCharactersPosition(dialogueList[currentIndex]);    
-                HandleDialogueText(dialogueList[currentIndex]);   
+                environmentManager.HandleCamera(dialogueList[currentIndex]);
+                environmentManager.HandleLighting(dialogueList[currentIndex]);
+                environmentManager.HandleAmbientAudio(dialogueList[currentIndex]);
+                HandleCharactersPosition(dialogueList[currentIndex]);
+                HandleDialogueText(dialogueList[currentIndex]);
                 currentIndex++;
             }
         }
-    }
-
-
-    public void HandleCamera(DialogueData dialogueData)
-    {
-
-        //We get the CameraPosition set from the dialogue
-        string cameraPosition = dialogueData.CameraPosition.ToString();
-
-        //If the camera position is Drawer we set the camera pos to this values
-        if(cameraPosition == "Drawer"){
-            targetCamera.transform.position = new Vector3(-0.45f, 1f, 0.1f);
-            targetCamera.transform.rotation = Quaternion.Euler(0f, 7f, 0f);
-        }
-
-        //If the camera position is Corridor we set the camera pos to this values
-        if(cameraPosition == "Corridor"){
-            targetCamera.transform.position = new Vector3(0f, 1f, 0f);
-            targetCamera.transform.rotation = Quaternion.Euler(0f, 180f, 0f);            
-        }
-
     }
 
     public void HandleCharactersPosition(DialogueData dialogueData)
@@ -182,8 +129,19 @@ public class DialogueManager : MonoBehaviour
         GameObject targetPos = GameObject.Find(posName);
 
         targetTalkingCharacter.transform.position = targetPos.transform.position;
-        targetTalkingCharacter.GetComponent<SpriteRenderer>().enabled = true;
+
+        SpriteRenderer targetSr = targetTalkingCharacter.GetComponent<SpriteRenderer>();
+
+        // Asigna el sprite correspondiente a la etapa de vida indicada en el dialogo
+        Sprite stageSprite = GetSpriteForStage(dialogueData.characterStage);
+        if (stageSprite != null)
+        {
+            targetSr.sprite = stageSprite;
+        }
+
+        targetSr.enabled = true;
     }
+
     public void HandleDialogueBox(DialogueData dialogueData)
     {
         string dialogueText = dialogueData.dialogueText;
@@ -196,6 +154,7 @@ public class DialogueManager : MonoBehaviour
 
         }
     }
+
     public void HandleDialogueText(DialogueData dialogueData)
     {
         string dialogueText = dialogueData.dialogueText;
@@ -216,7 +175,7 @@ public class DialogueManager : MonoBehaviour
         float basePitch = GetPitchForCharacter(speakingChar);
 
         charDialogueText.text = dialogueText;
-        charDialogueText.ForceMeshUpdate(); // fuerza el recalculo sincrónico del mesh
+        charDialogueText.ForceMeshUpdate(); // fuerza el recalculo sincronico del mesh
         charDialogueText.maxVisibleCharacters = 0;
 
         int totalChars = charDialogueText.textInfo.characterCount; // ahora es confiable
@@ -242,78 +201,27 @@ public class DialogueManager : MonoBehaviour
     {
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
-    
+
         charDialogueText.ForceMeshUpdate();
         charDialogueText.maxVisibleCharacters = charDialogueText.textInfo.characterCount;
         isTyping = false;
         typingCoroutine = null;
     }
 
+    // ---------- Character Stage Sprites ----------
 
-    public void HandleLighting(DialogueData dialogueData)
+    private Sprite GetSpriteForStage(CharacterStage stage)
     {
-        if (dialogueData.timeOfDay == currentTimeOfDay) return;
-        currentTimeOfDay = dialogueData.timeOfDay;
-
-        switch (dialogueData.timeOfDay)
+        foreach (CharacterStageSprite entry in characterStageSprites)
         {
-            case TimeOfDay.Day:
-                RenderSettings.skybox = materialDay;
-                sunLight.transform.rotation = Quaternion.Euler(61.366f, -53.53f, 9.491f);
-                sunLight.color = Color.white;
-                sunLight.colorTemperature = 6787f;
-                sunLight.shadowStrength = 0.691f;
-                break;
-
-            case TimeOfDay.Sunset:
-                RenderSettings.skybox = materialSunset;
-                sunLight.transform.rotation = Quaternion.Euler(20.427f, -24.282f, 50.445f);
-                sunLight.color = Color.white;
-                sunLight.colorTemperature = 3592f;
-                sunLight.shadowStrength = 0.691f;
-                break;
-
-            case TimeOfDay.Night:
-                RenderSettings.skybox = materialNight;
-                sunLight.transform.rotation = Quaternion.Euler(-70.196f, -95.416f, 153.642f);
-                sunLight.color = Color.white;
-                sunLight.colorTemperature = 20000f;
-                sunLight.shadowStrength = 0f;
-                break;
+            if (entry.stage == stage)
+            {
+                return entry.sprite;
+            }
         }
 
-        sunLight.useColorTemperature = true;
-        DynamicGI.UpdateEnvironment();
-    }
-
-    public void HandleAmbientAudio(DialogueData dialogueData)
-    {
-        // Si el TimeOfDay es igual al que ya está sonando, no hacemos nada
-        if (dialogueData.timeOfDay == currentAudioTimeOfDay) return;
-
-        currentAudioTimeOfDay = dialogueData.timeOfDay;
-
-        AudioClip clipToPlay = null;
-
-        switch (dialogueData.timeOfDay)
-        {
-            case TimeOfDay.Day:
-                clipToPlay = morningAudio;
-                break;
-            case TimeOfDay.Sunset:
-                clipToPlay = afternoonAudio;
-                break;
-            case TimeOfDay.Night:
-                clipToPlay = nightAudio;
-                break;
-        }
-
-        if (clipToPlay != null)
-        {
-            ambientAudioSource.clip = clipToPlay;
-            ambientAudioSource.loop = true;
-            ambientAudioSource.Play();
-        }
+        Debug.LogWarning($"No se encontro sprite asignado para la etapa: {stage}");
+        return null;
     }
 
     // ---------- Blip Audio (Animal Crossing style) ----------
@@ -362,4 +270,11 @@ public class DialogueManager : MonoBehaviour
         clip.SetData(samples, 0);
         return clip;
     }
+}
+
+[System.Serializable]
+public class CharacterStageSprite
+{
+    public CharacterStage stage;
+    public Sprite sprite;
 }

@@ -18,8 +18,9 @@ public class DialogueData
     public int DialogueID;
     public string dialogueText;
     public Characters TalkingCharacter;
+    public CharacterStage characterStage; // que etapa/edad del personaje mostrar en este dialogo
     public CameraPosition CameraPosition;
-     public TimeOfDay timeOfDay;
+    public TimeOfDay timeOfDay;
 
 }
 
@@ -28,12 +29,12 @@ public enum TimeOfDay
     Day,
     Sunset,
     Night
-} 
+}
 
 //Camera's availble positions
 public enum CameraPosition{
-        Drawer,
-        Corridor
+    Drawer,
+    Corridor
 }
 
 //Characters Available in the game
@@ -43,3 +44,19 @@ public enum Characters{
     Lara
 }
 
+//Etapas de vida/edad de cada personaje a lo largo de la historia
+public enum CharacterStage
+{
+    // Regina
+    Regina_Child,
+    Regina_Teenager,
+    Regina_Adult,
+
+    // Teresa
+    Teresa_Adult,
+    Teresa_OlderAdult,
+
+    // Lara
+    Lara_Toddler,
+    Lara_Child
+}
