@@ -4,6 +4,11 @@ using UnityEngine;
 public class EnvironmentManager : MonoBehaviour
 {
 
+    [Header("Stages")]
+    [Tooltip("Objeto padre 'Stages': sus hijos directos estan ocultos salvo los que indique cada dialogo")]
+    [SerializeField]
+    private Transform stagesRoot;
+
     [Header("Camera:")]
     [SerializeField]
     private Camera targetCamera;
@@ -43,17 +48,10 @@ public class EnvironmentManager : MonoBehaviour
         DynamicGI.UpdateEnvironment();
     }
 
-    // Llamar una sola vez al iniciar: apaga todo lo que alguna vez aparece en la historia
-    // y despues aplica el estado del dialogo 0 (lo que debe verse desde el principio)
+    // Llamar una sola vez al iniciar: esconde todo lo de Stages y aplica lo que indica el dialogo 0
     public void InitializeSceneObjects(List<DialogueData> allDialogues)
     {
-        foreach (DialogueData d in allDialogues)
-        {
-            foreach (GameObject obj in d.showObjects)
-            {
-                if (obj != null) obj.SetActive(false);
-            }
-        }
+        HideStagesContent();
 
         if (allDialogues.Count > 0)
         {
@@ -61,18 +59,34 @@ public class EnvironmentManager : MonoBehaviour
         }
     }
 
-    // Oculta y muestra objetos de la escena segun lo indicado en el dialogo
+    // Esconde todo lo de Stages y muestra solo lo indicado en el dialogo.
+    // Lista vacia = no cambia nada.
     public void HandleSceneObjects(DialogueData dialogueData)
     {
-        foreach (GameObject obj in dialogueData.hideObjects)
-        {
-            if (obj != null) obj.SetActive(false);
-        }
+        if (dialogueData.showObjects == null || dialogueData.showObjects.Count == 0) return;
 
-        // Se muestra despues de ocultar: si un objeto esta en ambas listas, gana "show"
+        HideStagesContent();
+
         foreach (GameObject obj in dialogueData.showObjects)
         {
-            if (obj != null) obj.SetActive(true);
+            if (obj == null) continue;
+
+            if (stagesRoot != null && obj.transform.parent != stagesRoot)
+            {
+                Debug.LogWarning($"'{obj.name}' no es hijo directo de '{stagesRoot.name}', no se escondera en los siguientes dialogos.");
+            }
+
+            obj.SetActive(true);
+        }
+    }
+
+    private void HideStagesContent()
+    {
+        if (stagesRoot == null) return;
+
+        foreach (Transform child in stagesRoot)
+        {
+            child.gameObject.SetActive(false);
         }
     }
 
@@ -92,8 +106,8 @@ public class EnvironmentManager : MonoBehaviour
         //If the camera position is Corridor we set the camera pos to this values
         if (cameraPosition == "Corridor")
         {
-            targetCamera.transform.position = new Vector3(0.023f, 1.584f, 1.376f);
-            targetCamera.transform.rotation = Quaternion.Euler(6.099f, 180f, 0f);
+            targetCamera.transform.position = new Vector3(-0.046f, 1.33f, 1.165f);
+            targetCamera.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
         }
 
     }

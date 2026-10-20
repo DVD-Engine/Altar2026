@@ -22,8 +22,8 @@ public class DialogueData
     public CameraPosition CameraPosition;
     public TimeOfDay timeOfDay;
 
-    // Objetos de la escena que cambian en este dialogo (arrastrar desde la jerarquia)
-    public List<GameObject> hideObjects = new List<GameObject>();
+    // Objetos de Stages que se ven desde este dialogo (todo lo demas de Stages se esconde).
+    // Vacio = no cambia nada, se queda lo del dialogo anterior.
     public List<GameObject> showObjects = new List<GameObject>();
 
 }
