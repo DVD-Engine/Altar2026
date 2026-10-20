@@ -22,6 +22,10 @@ public class DialogueData
     public CameraPosition CameraPosition;
     public TimeOfDay timeOfDay;
 
+    // Objetos de la escena que cambian en este dialogo (arrastrar desde la jerarquia)
+    public List<GameObject> hideObjects = new List<GameObject>();
+    public List<GameObject> showObjects = new List<GameObject>();
+
 }
 
 public enum TimeOfDay

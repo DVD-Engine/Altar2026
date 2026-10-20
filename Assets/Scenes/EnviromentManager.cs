@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnvironmentManager : MonoBehaviour
@@ -42,6 +43,39 @@ public class EnvironmentManager : MonoBehaviour
         DynamicGI.UpdateEnvironment();
     }
 
+    // Llamar una sola vez al iniciar: apaga todo lo que alguna vez aparece en la historia
+    // y despues aplica el estado del dialogo 0 (lo que debe verse desde el principio)
+    public void InitializeSceneObjects(List<DialogueData> allDialogues)
+    {
+        foreach (DialogueData d in allDialogues)
+        {
+            foreach (GameObject obj in d.showObjects)
+            {
+                if (obj != null) obj.SetActive(false);
+            }
+        }
+
+        if (allDialogues.Count > 0)
+        {
+            HandleSceneObjects(allDialogues[0]);
+        }
+    }
+
+    // Oculta y muestra objetos de la escena segun lo indicado en el dialogo
+    public void HandleSceneObjects(DialogueData dialogueData)
+    {
+        foreach (GameObject obj in dialogueData.hideObjects)
+        {
+            if (obj != null) obj.SetActive(false);
+        }
+
+        // Se muestra despues de ocultar: si un objeto esta en ambas listas, gana "show"
+        foreach (GameObject obj in dialogueData.showObjects)
+        {
+            if (obj != null) obj.SetActive(true);
+        }
+    }
+
     public void HandleCamera(DialogueData dialogueData)
     {
 
@@ -58,8 +92,8 @@ public class EnvironmentManager : MonoBehaviour
         //If the camera position is Corridor we set the camera pos to this values
         if (cameraPosition == "Corridor")
         {
-            targetCamera.transform.position = new Vector3(-0.046f, 1.33f, 1.165f);
-            targetCamera.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            targetCamera.transform.position = new Vector3(0.023f, 1.584f, 1.376f);
+            targetCamera.transform.rotation = Quaternion.Euler(6.099f, 180f, 0f);
         }
 
     }

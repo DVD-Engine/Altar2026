@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -47,6 +48,10 @@ public class DialogueManager : MonoBehaviour
     [Tooltip("Asigna aqui el sprite correspondiente a cada etapa de cada personaje")]
     [SerializeField] private List<CharacterStageSprite> characterStageSprites;
 
+    [Header("Character Portrait (UI)")]
+    [Tooltip("Image del Canvas donde se muestra el personaje que habla")]
+    [SerializeField] private Image characterPortrait;
+
     private AudioClip blipClip;
 
     private bool isTyping = false;
@@ -61,8 +66,10 @@ public class DialogueManager : MonoBehaviour
     void Start()
     {
         dialogueList = localDialogues.dialogues;
+        environmentManager.InitializeSceneObjects(dialogueList);
         advanceDialogue = InputSystem.actions.FindAction("Jump");
         dialogueBox.SetActive(false);
+        characterPortrait.enabled = false;
 
         blipClip = GenerateBlipClip();
     }
@@ -90,56 +97,36 @@ public class DialogueManager : MonoBehaviour
                 Debug.Log(dialogueList[currentIndex].dialogueText.ToString());
 
                 HandleDialogueBox(dialogueList[currentIndex]);
+                environmentManager.HandleSceneObjects(dialogueList[currentIndex]);
                 environmentManager.HandleCamera(dialogueList[currentIndex]);
                 environmentManager.HandleLighting(dialogueList[currentIndex]);
                 environmentManager.HandleAmbientAudio(dialogueList[currentIndex]);
-                HandleCharactersPosition(dialogueList[currentIndex]);
+                HandleCharacterPortrait(dialogueList[currentIndex]);
                 HandleDialogueText(dialogueList[currentIndex]);
                 currentIndex++;
             }
         }
     }
 
-    public void HandleCharactersPosition(DialogueData dialogueData)
+    public void HandleCharacterPortrait(DialogueData dialogueData)
     {
-        // Hide every character's sprite first
-        foreach (Characters c in Enum.GetValues(typeof(Characters)))
-        {
-            GameObject charObj = GameObject.Find(c.ToString());
-            if (charObj != null)
-            {
-                SpriteRenderer sr = charObj.GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
-                    sr.enabled = false;
-                }
-            }
-        }
-
-        // If there's no dialogue text, leave everyone hidden
+        // Sin texto: nadie en pantalla
         if (string.IsNullOrEmpty(dialogueData.dialogueText))
         {
+            characterPortrait.enabled = false;
             return;
         }
 
-        GameObject targetTalkingCharacter = GameObject.Find(dialogueData.TalkingCharacter.ToString());
-
-        // Position depends only on which camera position this dialogue uses
-        string posName = dialogueData.CameraPosition == CameraPosition.Drawer ? "DrawerPos1" : "CorridorPos1";
-        GameObject targetPos = GameObject.Find(posName);
-
-        targetTalkingCharacter.transform.position = targetPos.transform.position;
-
-        SpriteRenderer targetSr = targetTalkingCharacter.GetComponent<SpriteRenderer>();
-
-        // Asigna el sprite correspondiente a la etapa de vida indicada en el dialogo
-        Sprite stageSprite = GetSpriteForStage(dialogueData.characterStage);
-        if (stageSprite != null)
+        CharacterStageSprite stageData = GetStageData(dialogueData.characterStage);
+        if (stageData == null || stageData.sprite == null)
         {
-            targetSr.sprite = stageSprite;
+            characterPortrait.enabled = false;
+            return;
         }
 
-        targetSr.enabled = true;
+        characterPortrait.sprite = stageData.sprite;
+        characterPortrait.rectTransform.localScale = Vector3.one * stageData.portraitScale;
+        characterPortrait.enabled = true;
     }
 
     public void HandleDialogueBox(DialogueData dialogueData)
@@ -210,13 +197,13 @@ public class DialogueManager : MonoBehaviour
 
     // ---------- Character Stage Sprites ----------
 
-    private Sprite GetSpriteForStage(CharacterStage stage)
+    private CharacterStageSprite GetStageData(CharacterStage stage)
     {
         foreach (CharacterStageSprite entry in characterStageSprites)
         {
             if (entry.stage == stage)
             {
-                return entry.sprite;
+                return entry;
             }
         }
 
@@ -277,4 +264,5 @@ public class CharacterStageSprite
 {
     public CharacterStage stage;
     public Sprite sprite;
+    public float portraitScale = 1f; // para igualar tamanos entre etapas (ej. ninas mas chicas)
 }
