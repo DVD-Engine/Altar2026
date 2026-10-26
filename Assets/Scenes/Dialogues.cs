@@ -26,6 +26,13 @@ public class DialogueData
     // Vacio = no cambia nada, se queda lo del dialogo anterior.
     public List<GameObject> showObjects = new List<GameObject>();
 
+    // Radio: solo se llena en el dialogo donde algo cambia, en los demas se deja vacio
+    [Header("Radio")]
+    public AudioClip radioClip;     // vacio = no cambia el audio
+    [Range(0f, 1f)]
+    public float radioVolume;       // 0 = no cambia el volumen
+    public bool radioOff;           // marcar para apagar la radio en este dialogo
+
 }
 
 public enum TimeOfDay

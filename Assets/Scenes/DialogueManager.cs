@@ -19,6 +19,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField]
     private EnvironmentManager environmentManager;
 
+    [Header("Radio")]
+    [SerializeField]
+    private RadioManager radioManager;
+
     [Header("Dialogue Box")]
     [SerializeField]
     private GameObject dialogueBox;
@@ -67,6 +71,11 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueList = localDialogues.dialogues;
         environmentManager.InitializeSceneObjects(dialogueList);
+
+        if (radioManager == null)
+        {
+            Debug.LogWarning("DialogueManager: falta arrastrar el Radio Manager, la radio no va a sonar.");
+        }
         advanceDialogue = InputSystem.actions.FindAction("Jump");
         dialogueBox.SetActive(false);
         characterPortrait.enabled = false;
@@ -101,6 +110,7 @@ public class DialogueManager : MonoBehaviour
                 environmentManager.HandleCamera(dialogueList[currentIndex]);
                 environmentManager.HandleLighting(dialogueList[currentIndex]);
                 environmentManager.HandleAmbientAudio(dialogueList[currentIndex]);
+                if (radioManager != null) radioManager.HandleDialogue(dialogueList[currentIndex]);
                 HandleCharacterPortrait(dialogueList[currentIndex]);
                 HandleDialogueText(dialogueList[currentIndex]);
                 currentIndex++;
