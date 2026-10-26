@@ -106,8 +106,8 @@ public class EnvironmentManager : MonoBehaviour
         //If the camera position is Corridor we set the camera pos to this values
         if (cameraPosition == "Corridor")
         {
-            targetCamera.transform.position = new Vector3(-0.046f, 1.33f, 1.165f);
-            targetCamera.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            targetCamera.transform.position = new Vector3(0.023f, 1.584f, 1.376f);
+            targetCamera.transform.rotation = Quaternion.Euler(6.099f, 180f, 0f);
         }
 
     }

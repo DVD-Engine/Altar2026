@@ -23,6 +23,11 @@ public class DialogueManager : MonoBehaviour
     [SerializeField]
     private RadioManager radioManager;
 
+    [Header("Credits")]
+    [SerializeField]
+    private CreditsManager creditsManager;
+    private bool creditsStarted = false;
+
     [Header("Dialogue Box")]
     [SerializeField]
     private GameObject dialogueBox;
@@ -85,37 +90,59 @@ public class DialogueManager : MonoBehaviour
 
     void Update()
     {
-        if(currentIndex > dialogueList.Count - 1)
+        if (creditsStarted) return;
+        if (!advanceDialogue.WasPressedThisFrame()) return;
+
+        // Primer clic mientras se escribe: completa el texto
+        if (isTyping)
         {
-            Debug.Log("there are no more dialogues");
+            CompleteTyping();
             return;
         }
 
-        if (advanceDialogue.WasPressedThisFrame())
+        // Ya no quedan dialogos: empiezan los creditos
+        if (currentIndex > dialogueList.Count - 1)
         {
-
-            if (isTyping)
-            {
-                // First press while typing: skip straight to full text
-                CompleteTyping();
-            }
-            else
-            {
-                // Not typing: advance to next dialogue
-                Debug.Log(dialogueList[currentIndex].DialogueID.ToString());
-                Debug.Log(dialogueList[currentIndex].dialogueText.ToString());
-
-                HandleDialogueBox(dialogueList[currentIndex]);
-                environmentManager.HandleSceneObjects(dialogueList[currentIndex]);
-                environmentManager.HandleCamera(dialogueList[currentIndex]);
-                environmentManager.HandleLighting(dialogueList[currentIndex]);
-                environmentManager.HandleAmbientAudio(dialogueList[currentIndex]);
-                if (radioManager != null) radioManager.HandleDialogue(dialogueList[currentIndex]);
-                HandleCharacterPortrait(dialogueList[currentIndex]);
-                HandleDialogueText(dialogueList[currentIndex]);
-                currentIndex++;
-            }
+            StartCredits();
+            return;
         }
+
+        // Avanza al siguiente dialogo
+        Debug.Log(dialogueList[currentIndex].DialogueID.ToString());
+        Debug.Log(dialogueList[currentIndex].dialogueText.ToString());
+
+        HandleDialogueBox(dialogueList[currentIndex]);
+        environmentManager.HandleSceneObjects(dialogueList[currentIndex]);
+        environmentManager.HandleCamera(dialogueList[currentIndex]);
+        environmentManager.HandleLighting(dialogueList[currentIndex]);
+        environmentManager.HandleAmbientAudio(dialogueList[currentIndex]);
+        if (radioManager != null) radioManager.HandleDialogue(dialogueList[currentIndex]);
+        HandleCharacterPortrait(dialogueList[currentIndex]);
+        HandleDialogueText(dialogueList[currentIndex]);
+        currentIndex++;
+
+        if (currentIndex > dialogueList.Count - 1)
+        {
+            Debug.Log("DialogueManager: ultimo dialogo mostrado, el siguiente clic lanza los creditos");
+        }
+    }
+
+    private void StartCredits()
+    {
+        if (creditsManager == null)
+        {
+            Debug.LogWarning("DialogueManager: falta arrastrar el Credits Manager, no se pueden mostrar los creditos.");
+            return;
+        }
+
+        creditsStarted = true;
+        Debug.Log("DialogueManager: fin de los dialogos, lanzando creditos");
+
+        // Se limpia la pantalla de dialogo antes de que aparezcan los creditos
+        dialogueBox.SetActive(false);
+        characterPortrait.enabled = false;
+
+        creditsManager.StartCredits();
     }
 
     public void HandleCharacterPortrait(DialogueData dialogueData)
